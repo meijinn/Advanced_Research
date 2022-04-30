@@ -1,8 +1,11 @@
-import sys, time
-
+import time
 for i in range(10):
-    s = str(i)
-    sys.stdout.write("\033[G%s" % s)
-    sys.stdout.flush()
-    time.sleep(0.5)
-print("")
+    print(str(i)+'\n'+str(i)+'\n'+str(i)+'\n'+'\033[3A')
+    time.sleep(1)
+
+
+# import sys,time
+# for x in range(10):
+#     sys.stdout.write('\r'+str(x))
+#     sys.stdout.flush()
+#     time.sleep(1)

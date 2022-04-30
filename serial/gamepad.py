@@ -12,12 +12,12 @@ pygame.joystick.init()
 try:
     j = pygame.joystick.Joystick(0) # create a joystick instance
     j.init() # init instance
-    print "Joystickã®åç§°:" + j.get_name()
-    print "ãƒœã‚¿ãƒ³æ•° : " + str(j.get_numbuttons())
-    print "ãƒ¬ãƒãƒ¼æ•° : " + str(j.get_numaxes())
-    print "ãƒœãƒ¼ãƒ«æ•° : " + str(j.get_numballs())
+    print "Joystick‚Ì–¼Ì:" + j.get_name()
+    print "ƒ{ƒ^ƒ“” : " + str(j.get_numbuttons())
+    print "ƒŒƒo[” : " + str(j.get_numaxes())
+    print "ƒ{[ƒ‹” : " + str(j.get_numballs())
 except pygame.error:
-    print 'JoystickãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸã€‚'
+    print 'Joystick‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½B'
     pygame.quit()
     sys.exit()
 
@@ -27,14 +27,14 @@ def main():
     pygame.init()
 
     while 1:
-        for e in pygame.event.get(): # ã‚¤ãƒ™ãƒ³ãƒˆãƒã‚§ãƒƒã‚¯
-            if e.type == JOYHATMOTION: # çµ‚äº†ãŒæŠ¼ã•ã‚ŒãŸï¼Ÿ
+        for e in pygame.event.get(): # ƒCƒxƒ“ƒgƒ`ƒFƒbƒN
+            if e.type == JOYHATMOTION: # I—¹‚ª‰Ÿ‚³‚ê‚½H
                 pygame.quit()
                 sys.exit()
             if (e.type == KEYDOWN and
-                e.key  == K_ESCAPE): # ESCãŒæŠ¼ã•ã‚ŒãŸï¼Ÿ
+                e.key  == K_ESCAPE): # ESC‚ª‰Ÿ‚³‚ê‚½H
                 pygame.quit()
-            # Joystické–¢é€£ã®ã‚¤ãƒ™ãƒ³ãƒˆãƒã‚§ãƒƒã‚¯
+            # JoystickŠÖ˜A‚ÌƒCƒxƒ“ƒgƒ`ƒFƒbƒN
             if e.type == pygame.locals.JOYAXISMOTION: # 7
                 joyget()
 
@@ -46,16 +46,16 @@ def main():
             #elif e.type == pygame.locals.JOYHATMOTION: # 9
             #    print 'hat motion'
             #elif e.type == pygame.locals.JOYBUTTONDOWN: # 10
-            #    print str(e.button)+'ç•ªç›®ã®ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸ'
+            #    print str(e.button)+'”Ô–Ú‚Ìƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½'
             #elif e.type == pygame.locals.JOYBUTTONUP: # 11
-            #    print str(e.button)+'ç•ªç›®ã®ãƒœã‚¿ãƒ³ãŒé›¢ã•ã‚ŒãŸ'
+            #    print str(e.button)+'”Ô–Ú‚Ìƒ{ƒ^ƒ“‚ª—£‚³‚ê‚½'
 
 
 def joyget():
-# Joystické–¢é€£ã®ã‚¤ãƒ™ãƒ³ãƒˆãƒã‚§ãƒƒã‚¯
+# JoystickŠÖ˜A‚ÌƒCƒxƒ“ƒgƒ`ƒFƒbƒN
     input_array = []
     input_array = getUserInput(j.get_axis(0),j.get_axis(1),j.get_axis(2))
-# steeringã¨throttleã®æˆ»ã‚Šå€¤ã‚’å¾—ã‚‹
+# steering‚Æthrottle‚Ì–ß‚è’l‚ğ“¾‚é
 
     steering = constrain(input_array[0])
     throttle = input_array[1]

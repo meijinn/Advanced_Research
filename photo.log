@@ -1,0 +1,1 @@
+   MainThread:21:02:03.028 util.py                                   327 DEBUG    | Send cmd --> netsh wlan disconnect

@@ -15,8 +15,8 @@ pygame.joystick.init()
 try:# 例外があるかもしれないが、実行したい処理
     j = pygame.joystick.Joystick(0) # create a joystick instance
     j.init() # init instance
-    print ("Joystick name: ") + j.get_name()
-    print ("Number of buttons: ") + str(j.get_numbuttons())
+    print ("Joystick name: " + j.get_name())
+    print ("Number of buttons: " + str(j.get_numbuttons()))
 except pygame.error:# 例外時の処理
     print ('Joystick is not found')
     pygame.quit()
@@ -29,9 +29,9 @@ def main():
 
     while 1: # ②ループ
         for e in pygame.event.get(): # イベントチェック
-            # if e.type == JOYHATMOTION: # 終了が押された？
-            #     pygame.quit()
-            #     sys.exit()
+            if e.type == JOYHATMOTION: # 終了が押された？
+                pygame.quit()
+                sys.exit()
             if (e.type == KEYDOWN):
                 if (e.key  == K_ESCAPE): # ESCが押された？
                     pygame.quit()
@@ -39,7 +39,7 @@ def main():
                 gamepad_event()
 
 
-def gamepad_event():
+def gamepad_event(): 
     Senddata = joyget()
     Sendster = Senddata[0]
     Sendvel = Senddata[1]
@@ -48,15 +48,16 @@ def gamepad_event():
 def joyget():    
  # Joystick関連のイベントチェック
     input_array = []
-    input_array = getUserInput(j.get_axis(0),j.get_axis(2),j.get_axis(3))
+    input_array = getUserInput(j.get_axis(0),j.get_axis(4),j.get_axis(3))
     # steeringとthrottleの戻り値を得る
 
     steering = constrain(input_array[0])
     throttle = input_array[1]
     # 戻り値を配列に代入
 
-    sys.stdout.write('\r'+'steering: '+str(steering)+' '+'throttle: '+''+str(throttle))
+    sys.stdout.write('\r'+'steering: '+str(steering)+'  '+'throttle: '+str(throttle))
     sys.stdout.flush()
+    # print('\r' + 'steering: '+str(steering)+' '+'throttle: '+''+str(throttle))
 
     # print ('steering ' + str(steering))
     # print 'gas and brake ' + str(gas) +' , '+ str(brake)
@@ -68,7 +69,7 @@ def joyget():
 def getUserInput(ster_ax,gas_ax,brake_ax):
     
     steering = int(((j.get_axis(0)*180)+180)/2)
-    gas = (j.get_axis(2))+93
+    gas = (j.get_axis(4))+93
     brake = (j.get_axis(3)*-1*21+207)/2
     throttle = int((gas+brake)/2)
     return steering,throttle

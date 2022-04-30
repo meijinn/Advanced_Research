@@ -7,17 +7,17 @@
 import pygame,serial,sys
 from pygame.locals import *
 
-ser = serial.Serial("/dev/ttyUSB0",115200,timeout=1)
+ser = serial.Serial("COM5",115200,timeout=1)
 
 pygame.joystick.init()
 
 
-try:# ä¾‹å¤–ãŒã‚ã‚‹ã‹ã‚‚ã—ã‚Œãªã„ãŒã€å®Ÿè¡Œã—ãŸã„å‡¦ç†
+try:# —áŠO‚ª‚ ‚é‚©‚à‚µ‚ê‚È‚¢‚ªAÀs‚µ‚½‚¢ˆ—
     j = pygame.joystick.Joystick(0) # create a joystick instance
     j.init() # init instance
-    print ("Joystick name: ") + j.get_name()
-    print ("Number of buttons: ") + str(j.get_numbuttons())
-except pygame.error:# ä¾‹å¤–æ™‚ã®å‡¦ç†
+    print ("Joystick name: " + j.get_name())
+    print ("Number of buttons: " + str(j.get_numbuttons()))
+except pygame.error:# —áŠO‚Ìˆ—
     print ('Joystick is not found')
     pygame.quit()
     sys.exit()
@@ -25,26 +25,18 @@ except pygame.error:# ä¾‹å¤–æ™‚ã®å‡¦ç†
 
 def main():
     pygame.init()
-    # initialize() # â‘ åˆæœŸåŒ–
+    # initialize() # ‡@‰Šú‰»
 
-    while 1: # â‘¡ãƒ«ãƒ¼ãƒ—
-        for e in pygame.event.get(): # ã‚¤ãƒ™ãƒ³ãƒˆãƒã‚§ãƒƒã‚¯
-            if e.type == JOYHATMOTION: # çµ‚äº†ãŒæŠ¼ã•ã‚ŒãŸï¼Ÿ
+    while 1: # ‡Aƒ‹[ƒv
+        for e in pygame.event.get(): # ƒCƒxƒ“ƒgƒ`ƒFƒbƒN
+            if e.type == JOYHATMOTION: # I—¹‚ª‰Ÿ‚³‚ê‚½H
                 pygame.quit()
                 sys.exit()
             if (e.type == KEYDOWN):
-                if (e.key  == K_ESCAPE): # ESCãŒæŠ¼ã•ã‚ŒãŸï¼Ÿ
+                if (e.key  == K_ESCAPE): # ESC‚ª‰Ÿ‚³‚ê‚½H
                     pygame.quit()
-            if e.type == pygame.locals.JOYAXISMOTION: # 7 ã‚²ãƒ¼ãƒ ãƒ‘ãƒƒãƒ‰ã®ãƒœã‚¿ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆ
+            if e.type == pygame.locals.JOYAXISMOTION: # 7 ƒQ[ƒ€ƒpƒbƒh‚Ìƒ{ƒ^ƒ“ƒCƒxƒ“ƒg
                 gamepad_event()
-
-"""
-def initialize(): # é–¢æ•°â‘  åˆæœŸåŒ–
-    pygame.init()
-    screen = pygame.display.set_mode((400,300))
-    pygame.display.set_caption("keyboard event")
-    screen.fill((0,0,0))
-"""
 
 
 def gamepad_event(): 
@@ -54,17 +46,18 @@ def gamepad_event():
     serial_write(Sendster,Sendvel)
 
 def joyget():    
- # Joystické–¢é€£ã®ã‚¤ãƒ™ãƒ³ãƒˆãƒã‚§ãƒƒã‚¯
+ # JoystickŠÖ˜A‚ÌƒCƒxƒ“ƒgƒ`ƒFƒbƒN
     input_array = []
-    input_array = getUserInput(j.get_axis(0),j.get_axis(5),j.get_axis(2))
-    # steeringã¨throttleã®æˆ»ã‚Šå€¤ã‚’å¾—ã‚‹
+    input_array = getUserInput(j.get_axis(0),j.get_axis(4),j.get_axis(3))
+    # steering‚Æthrottle‚Ì–ß‚è’l‚ğ“¾‚é
 
     steering = constrain(input_array[0])
     throttle = input_array[1]
-    # æˆ»ã‚Šå€¤ã‚’é…åˆ—ã«ä»£å…¥
+    # –ß‚è’l‚ğ”z—ñ‚É‘ã“ü
 
-    sys.stdout.write("steering: \033[2K\033[G%s" % 'steering: '+str(steering)+' '+'throttle: '+''+str(throttle))
+    sys.stdout.write('\r'+'steering: '+str(steering)+'  '+'throttle: '+str(throttle))
     sys.stdout.flush()
+    # print('\r' + 'steering: '+str(steering)+' '+'throttle: '+''+str(throttle))
 
     # print ('steering ' + str(steering))
     # print 'gas and brake ' + str(gas) +' , '+ str(brake)
@@ -76,8 +69,8 @@ def joyget():
 def getUserInput(ster_ax,gas_ax,brake_ax):
     
     steering = int(((j.get_axis(0)*180)+180)/2)
-    gas = (j.get_axis(5)*-1)+93
-    brake = (j.get_axis(2)*21+207)/2
+    gas = (j.get_axis(4))+93
+    brake = (j.get_axis(3)*-1*21+207)/2
     throttle = int((gas+brake)/2)
     return steering,throttle
 
@@ -99,5 +92,5 @@ def serial_write(ster,vel):
     ser.write(chr(ster))
     ser.write(chr(vel))
 
-if __name__ == '__main__': main() # ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‚’ç›´æ¥å®Ÿè¡Œã—ãŸã‚‰ã€main()ã‚’å®Ÿè¡Œ
+if __name__ == '__main__': main() # ƒ‚ƒWƒ…[ƒ‹‚ğ’¼ÚÀs‚µ‚½‚çAmain()‚ğÀs
 # end of file
