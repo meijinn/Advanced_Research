@@ -7,7 +7,7 @@
 import pygame,serial,sys
 from pygame.locals import *
 
-ser = serial.Serial("COM5",115200,timeout=1)
+ser = serial.Serial("/dev/ttyUSB0",115200,timeout=1)
 
 pygame.joystick.init()
 
@@ -35,6 +35,7 @@ def main():
             #    if (e.key  == K_ESCAPE): # ESCが押された？
             #        pygame.quit()
             if e.type == pygame.locals.JOYAXISMOTION: # 7 ゲームパッドのボタンイベント
+                pygame.event.pump()
                 gamepad_event()
 
 
@@ -53,19 +54,16 @@ def gamepad_event():
 def joyget():    
  # Joystick関連のイベントチェック
     input_array = []
-    input_array = getUserInput(j.get_axis(0),j.get_axis(4),j.get_axis(3))
+    input_array = getUserInput(j.get_axis(0),j.get_axis(5),j.get_axis(2))
     # steeringとthrottleの戻り値を得る。
 
     steering = constrain(input_array[0])
     throttle = input_array[1]
     # 戻り値を配列に代入
 
-    sys.stdout.write('\r'+'steering: '+str(steering)+'  '+'throttle: '+str(throttle) )
+    sys.stdout.write('\r' + 'steering: '+str(steering)+' '+'throttle: '+''+str(throttle))
     sys.stdout.flush()
-    # print('\r' + 'steering: '+str(steering)+' '+'throttle: '+''+str(throttle))
-
     # print ('steering ' + str(steering))
-    # print 'gas and brake ' + str(gas) +' , '+ str(brake)
     # print ('throttle ' + str(throttle))
 
     return steering,throttle
@@ -74,8 +72,8 @@ def joyget():
 def getUserInput(ster_ax,gas_ax,brake_ax):
     
     steering = int(((j.get_axis(0)*180)+180)/2)
-    gas = (j.get_axis(4))+93
-    brake = (j.get_axis(3)*-1*21+207)/2
+    gas = (j.get_axis(5)*(-1))+93
+    brake = (j.get_axis(2)*21+207)/2
     throttle = int((gas+brake)/2)
     return steering,throttle
 
