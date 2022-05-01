@@ -24,38 +24,43 @@ except pygame.error:# 例外時の処理
 
 
 def main():
-    pygame.init()
-    # initialize() # ①初期化
 
+    pygame.init()
     while 1: # ②ループ
         for e in pygame.event.get(): # イベントチェック
-            if e.type == JOYHATMOTION: # 終了が押された？
-                pygame.quit()
-                sys.exit()
-            if (e.type == KEYDOWN):
-                if (e.key  == K_ESCAPE): # ESCが押された？
-                    pygame.quit()
+            #if e.type == JOYHATMOTION: # 終了が押された？
+            #    pygame.quit()
+            #    sys.exit()
+            #if (e.type == KEYDOWN):
+            #    if (e.key  == K_ESCAPE): # ESCが押された？
+            #        pygame.quit()
             if e.type == pygame.locals.JOYAXISMOTION: # 7 ゲームパッドのボタンイベント
                 gamepad_event()
 
 
-def gamepad_event(): 
+def gamepad_event():
+
     Senddata = joyget()
-    Sendster = Senddata[0]
-    Sendvel = Senddata[1]
-    serial_write(Sendster,Sendvel)
+    for i in range(2): # Senddata[0] = Steering Senddata[1] = vel
+        low = Senddata[i]&31
+        high = (Senddata[i]>>5)&31
+        head = ((Senddata[i]>>10)&31)+128+i
+        ser.write(chr(head))
+        ser.write(chr(high))
+        ser.write(chr(low))
+    
 
 def joyget():    
  # Joystick関連のイベントチェック
     input_array = []
     input_array = getUserInput(j.get_axis(0),j.get_axis(4),j.get_axis(3))
-    # steeringとthrottleの戻り値を得る
+    # steeringとthrottleの戻り値を得る。
 
     steering = constrain(input_array[0])
     throttle = input_array[1]
     # 戻り値を配列に代入
 
-    sys.stdout.write('\r'+'steering: '+str(steering)+'  '+'throttle: '+str(throttle))
+    sys.stdout.write('\r'+'steering: '+str(steering)+'  '+'throttle: '+str(throttle) )
     sys.stdout.flush()
     # print('\r' + 'steering: '+str(steering)+' '+'throttle: '+''+str(throttle))
 
@@ -87,10 +92,11 @@ def constrain(ster_data):
         return ster_data
 
 
-def serial_write(ster,vel):
+# def serial_write(ster,vel):
 
-    ser.write(chr(ster))
-    ser.write(chr(vel))
+
+#    ser.write(chr(ster))
+#    ser.write(chr(vel))
 
 if __name__ == '__main__': main() # モジュールを直接実行したら、main()を実行
 # end of file

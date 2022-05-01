@@ -29,30 +29,21 @@ def main():
 
     while 1: # ②ループ
         for e in pygame.event.get(): # イベントチェック
-            #if e.type == JOYHATMOTION: # 終了が押された？
-            #    pygame.quit()
-            #    sys.exit()
-            #if (e.type == KEYDOWN):
-            #    if (e.key  == K_ESCAPE): # ESCが押された？
-            #        pygame.quit()
+            if e.type == JOYHATMOTION: # 終了が押された？
+                pygame.quit()
+                sys.exit()
+            if (e.type == KEYDOWN):
+                if (e.key  == K_ESCAPE): # ESCが押された？
+                    pygame.quit()
             if e.type == pygame.locals.JOYAXISMOTION: # 7 ゲームパッドのボタンイベント
                 gamepad_event()
 
 
 def gamepad_event(): 
     Senddata = joyget()
-    for i in range(2):
-        low = Senddata[i]&31;
-        high = (Senddata[i]>>5)&31;
-        head = ((Senddata[i]>>10)&31)+128+i
-        ser.write(chr(head))
-        ser.write(chr(high))
-        ser.write(chr(low))
-
-#    Sendster = Senddata[0]
-#    Sendvel = Senddata[1]
-
-    
+    Sendster = Senddata[0]
+    Sendvel = Senddata[1]
+    serial_write(Sendster,Sendvel)
 
 def joyget():    
  # Joystick関連のイベントチェック
@@ -86,21 +77,20 @@ def getUserInput(ster_ax,gas_ax,brake_ax):
 
 def constrain(ster_data):
 
-    if(ster_data > 145):
-        steering = 145
+    if(ster_data > 180):
+        steering = 180
         return steering
-    if(ster_data < 45):
-        steering = 45
+    if(ster_data < 0):
+        steering = 0
         return steering
     else:
         return ster_data
 
 
-# def serial_write(ster,vel):
+def serial_write(ster,vel):
 
-
-#    ser.write(chr(ster))
-#    ser.write(chr(vel))
+    ser.write(chr(ster))
+    ser.write(chr(vel))
 
 if __name__ == '__main__': main() # モジュールを直接実行したら、main()を実行
 # end of file
